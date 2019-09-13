@@ -1,18 +1,24 @@
-image: archlinux/base
+image: gcc
 
-services:
-- docker
+before_script:
+ - apt-get update --yes
+ - apt-get install --yes cmake
+ - apt-get install -y -qq git make clang
 
 build:
-    stage: build
-    before_script:
-      - pacman -Syu clang cmake make --noconfirm
-    script:
-        - CXX=clang++ cmake ..
-        - make
-
+  stage: build
+  script:
+    - mkdir build && cd build
+    - CXX=clang++ cmake ..
+    - make
+  artifacts:
+    paths:
+      - mybinary
 
 test:
-    stage: test
-    script:
-        - ./tests/utility_fuzzer_test -max_total_time=60
+  stage: test
+  script:
+    - mkdir build && cd build
+    - CXX=clang++ cmake ..
+    - make
+    - ./tests/utility_fuzzer_test -max_total_time=60
