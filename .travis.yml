@@ -5,9 +5,11 @@ services:
 
 build:
     stage: build
-    pacman -Syu clang cmake make
+    before_script:
+      - pacman -Syu clang cmake make --noconfirm
     script:
         - CXX=clang++ cmake ..
+        - make
 
 
 test:
