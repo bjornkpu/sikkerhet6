@@ -1,2 +1,16 @@
-#install: make get-deps
-compiler: clang
+image: archlinux/base
+
+services:
+- docker
+
+build:
+    stage: build
+    pacman -Syu clang cmake make
+    script:
+        - CXX=clang++ cmake ..
+
+
+test:
+    stage: test
+    script:
+        - ./tests/utility_fuzzer_test -max_total_time=60
